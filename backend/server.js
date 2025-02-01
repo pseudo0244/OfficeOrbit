@@ -8,7 +8,7 @@ const buildingRoutes = require("./routes/buildingRoutes"); // Building routes
 const floorRoutes = require("./routes/floorRoutes"); // Floor routes
 const mapRoutes = require("./routes/mapRoutes"); // Map routes
 const pointRoutes = require("./routes/pointRoutes"); // Point routes
-const uploadRoutes = require("./routes/uploadRoutes"); // Upload routes
+const uploadRoutes = require("./routes/uploadRoutes"); // Upload routes (only if you need a separate upload route)
 
 dotenv.config(); // Load environment variables
 const app = express();
@@ -34,8 +34,8 @@ app.use("/api/buildings", buildingRoutes); // Building-related routes
 app.use("/api/floors", floorRoutes); // Floor-related routes
 app.use("/api/maps", mapRoutes); // Map-related routes
 app.use("/api/points", pointRoutes); // Point-related routes
-app.use("/api/upload", uploadRoutes); // File upload routes
-
+app.use("/api/upload", uploadRoutes); // File upload routes (if separate)
+  
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

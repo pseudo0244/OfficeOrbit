@@ -1,14 +1,18 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const BuildingSchema = new mongoose.Schema({
-  name: { type: String, required: true }, // Building name (e.g., "Building A")
-  address: { type: String }, // Address of the building
-  floors: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Floor",
-    },
-  ], // References to all the floors in this building
+const buildingSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  address: {
+    type: String,
+    required: true,
+  },
+  floors: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Floor',
+  }],
 });
 
-module.exports = mongoose.model("Building", BuildingSchema);
+module.exports = mongoose.model('Building', buildingSchema);
