@@ -57,6 +57,16 @@ const CanvasMap: React.FC<CanvasMapProps> = ({
       ctx.fillStyle = point.color
       ctx.fill()
 
+      // Display coordinates
+      ctx.fillStyle = "white"
+      ctx.strokeStyle = "black"
+      ctx.font = `${12 / zoom}px Arial`
+      ctx.lineWidth = 2 / zoom
+      const coordText = `(${Math.round(point.x)}, ${Math.round(point.y)})`
+      const textWidth = ctx.measureText(coordText).width
+      ctx.strokeText(coordText, point.x - textWidth / 2, point.y - 10 / zoom)
+      ctx.fillText(coordText, point.x - textWidth / 2, point.y - 10 / zoom)
+
       if (point.type === "seat" && point.details.name) {
         ctx.fillStyle = "black"
         ctx.font = `${12 / zoom}px Arial`
@@ -73,13 +83,16 @@ const CanvasMap: React.FC<CanvasMapProps> = ({
 
   const handleCanvasClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current
-    if (!canvas || !activePointType) return
+    if (!canvas || !activePointType || !imageElement) return
 
     const rect = canvas.getBoundingClientRect()
     const x = (event.clientX - rect.left - pan.x) / zoom
     const y = (event.clientY - rect.top - pan.y) / zoom
 
-    onAddPoint(x, y, activePointType, activeColor)
+    // Ensure the click is within the image bounds
+    if (x >= 0 && x <= imageElement.width && y >= 0 && y <= imageElement.height) {
+      onAddPoint(x, y, activePointType, activeColor)
+    }
   }
 
   const handleCanvasMouseMove = (event: React.MouseEvent<HTMLCanvasElement>) => {
