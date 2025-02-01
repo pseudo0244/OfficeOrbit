@@ -194,7 +194,7 @@ export default function FloorMapTool() {
           {selectedPoint && (
             <>
               <h2 className="text-2xl font-bold mb-4">
-                {selectedPoint.type === "seat" ? "Seat Details" : ${selectedPoint.type} Details}
+                {selectedPoint.type === "seat" ? "Seat Details" : `${selectedPoint.type} Details`}
               </h2>
               <form onSubmit={handleDetailsSubmit} className="space-y-4">
                 {selectedPoint.type === "seat" ? (
