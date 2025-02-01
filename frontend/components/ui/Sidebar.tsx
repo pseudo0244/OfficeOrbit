@@ -3,7 +3,7 @@ import { Home, Building, Settings } from "lucide-react"
 
 export default function Sidebar() {
   return (
-    <div className="w-64 bg-gray-900 text-white p-6 h-screen">
+    <div className="w-64 bg-gray-900 text-white p-6 h-screen fixed left-0 top-0 overflow-y-auto">
       <h1 className="text-2xl font-bold mb-8">Office Orbit</h1>
       <nav>
         <ul className="space-y-4">
