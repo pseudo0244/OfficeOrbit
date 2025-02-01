@@ -5,14 +5,14 @@ import Link from 'next/link';
 
 const Home = () => {
   const [floorName, setFloorName] = useState('');
-  const [building, setBuilding] = useState('');
+  const [building, setBuilding] = useState(''); // Now directly references the building name
   const [status, setStatus] = useState('');
-  const [mapInput, setMapInput] = useState<any>(null); // Now an image object
+  const [mapInput, setMapInput] = useState<any>(null); // Image object
   const [floorDetails, setFloorDetails] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newBuildingName, setNewBuildingName] = useState('');
   const [isAddBuildingModalOpen, setIsAddBuildingModalOpen] = useState(false);
-  const [buildings, setBuildings] = useState(['Building A', 'Building B', 'Building C']); // Initial list of buildings
+  const [buildings, setBuildings] = useState<any[]>([]); // Buildings now as objects with name and id
 
   const handleSave = () => {
     const newFloor = {
@@ -34,8 +34,9 @@ const Home = () => {
 
   const handleAddBuilding = () => {
     if (newBuildingName.trim() !== '') {
-      setBuildings([...buildings, newBuildingName]); // Add the new building to the list
-      setBuilding(newBuildingName); // Set it as the selected building
+      const newBuilding = { id: Date.now(), name: newBuildingName }; // Creating unique ID
+      setBuildings([...buildings, newBuilding]); // Add the new building to the list
+      setBuilding(newBuilding.id); // Set the newly added building as selected
       setNewBuildingName(''); // Clear the input field
       setIsAddBuildingModalOpen(false); // Close the add building modal
     }
@@ -136,25 +137,15 @@ const Home = () => {
                 onChange={(e) => setFloorName(e.target.value)}
                 className="w-full px-4 py-2 bg-gray-200 text-gray-800 rounded-md"
               />
-              
+
+              {/* Updated Building Selection */}
               <div className="flex items-center space-x-4">
-                <select
-                  value={building}
-                  onChange={(e) => setBuilding(e.target.value)}
-                  className="w-full px-4 py-2 bg-gray-200 text-gray-800 rounded-md"
-                >
-                  <option value="">Select Building</option>
-                  {buildings.map((building, index) => (
-                    <option key={index} value={building}>
-                      {building}
-                    </option>
-                  ))}
-                </select>
+                <p className="text-gray-600">Building: {building ? `Building ${building}` : 'Select or Add Building'}</p>
                 <button
                   onClick={() => setIsAddBuildingModalOpen(true)}
                   className="bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800"
                 >
-                  Add
+                  Add/View Buildings
                 </button>
               </div>
 
