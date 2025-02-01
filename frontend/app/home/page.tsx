@@ -34,7 +34,7 @@ const Home = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-8">
+      <div className="flex-1 p-8 text-black">
         <h2 className="text-3xl font-semibold mb-4">Welcome to the Floor Plan Management App</h2>
         <p className="text-lg">Here you can manage your floor plans and more!</p>
       </div>

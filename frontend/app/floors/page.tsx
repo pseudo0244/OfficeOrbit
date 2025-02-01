@@ -128,13 +128,13 @@ const Home = () => {
               <div className="flex justify-between mt-4">
               <button
   onClick={handleSave}
-  className="bg-black text-white py-2 px-6 rounded-full shadow-md transition duration-300 ease-in-out hover:bg-gray-800 hover:shadow-lg hover:-translate-y-1"
+  className="bg-black text-white py-2 px-6 rounded-md shadow-md transition duration-300 ease-in-out hover:bg-gray-800 hover:shadow-lg hover:-translate-y-1"
 >
   Save
 </button>
 <button
   onClick={() => setIsModalOpen(false)}
-  className="bg-black text-white py-2 px-6 rounded-full shadow-md transition duration-300 ease-in-out hover:bg-gray-800 hover:shadow-lg hover:-translate-y-1"
+  className="bg-black text-white py-2 px-6 rounded-md shadow-md transition duration-300 ease-in-out hover:bg-gray-800 hover:shadow-lg hover:-translate-y-1"
 >
   Cancel
 </button>
