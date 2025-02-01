@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/backend/node_modules
 /.pnp
 .pnp.*
 .yarn/*
@@ -13,9 +14,9 @@
 # testing
 /coverage
 
-# next.js
-/.next/
-/out/
+# next.js (for frontend)
+frontend/.next/
+/frontend/out/
 
 # production
 /build
@@ -40,4 +41,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-/backend/node_modules/
+# backend node_modules (if any)
+backend/node_modules/
