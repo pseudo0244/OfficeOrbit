@@ -2,29 +2,41 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const connectDB = require("./config/db");
-const authRoutes = require("./routes/authroutes"); // Import auth routes
+const cloudinary = require("./config/cloudinary"); // Cloudinary config
+const authRoutes = require("./routes/authRoutes"); // Authentication routes
+const buildingRoutes = require("./routes/buildingRoutes"); // Building routes
+const floorRoutes = require("./routes/floorRoutes"); // Floor routes
+const mapRoutes = require("./routes/mapRoutes"); // Map routes
+const pointRoutes = require("./routes/pointRoutes"); // Point routes
+const uploadRoutes = require("./routes/uploadRoutes"); // Upload routes
 
 dotenv.config(); // Load environment variables
 const app = express();
-app.use(cors());
 
-// Middleware to parse JSON bodies
-app.use(express.json()); 
+// Middleware
+app.use(cors()); // Enable CORS
+app.use(express.json()); // Parse JSON bodies
 
-connectDB(); // Connect to the database
+// Connect to the database
+connectDB();
 
-// Simple route to test if the server is running
+// Initialize Cloudinary configuration
+cloudinary();
+
+// Test route to check if the server is running
 app.get("/", (req, res) => {
   res.send("Server is running...");
 });
 
-// Use authentication routes for handling login and registration
-app.use("/api/auth", authRoutes); // All routes starting with /api/auth will be handled by authRoutes
+// Routes
+app.use("/api/auth", authRoutes); // Authentication routes
+app.use("/api/buildings", buildingRoutes); // Building-related routes
+app.use("/api/floors", floorRoutes); // Floor-related routes
+app.use("/api/maps", mapRoutes); // Map-related routes
+app.use("/api/points", pointRoutes); // Point-related routes
+app.use("/api/upload", uploadRoutes); // File upload routes
 
-// Add any other routes here as needed, for example:
-// app.use("/api/employees", employeeRoutes);
-
-// Set up the server to listen on the specified port
+// Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
