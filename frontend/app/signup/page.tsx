@@ -1,193 +1,87 @@
-"use client";
-import React from 'react';
+"use client"
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { FaUser, FaLock, FaBuilding, FaEnvelope, FaBriefcase } from 'react-icons/fa';
+import { useState } from "react"
+import { motion } from "framer-motion"
+import { FaUser, FaLock, FaEnvelope, FaIdCard } from "react-icons/fa"
+import Link from "next/link"
 
-export default function SignIn() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isEmployee, setIsEmployee] = useState(false);
-  const [isOwner, setIsOwner] = useState(false);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [companyName, setCompanyName] = useState('');
-  const [post, setPost] = useState('');
-  const [ownerFirstName, setOwnerFirstName] = useState('');
-  const [ownerLastName, setOwnerLastName] = useState('');
-  const [ownerCompanyName, setOwnerCompanyName] = useState('');
-  const [ownerPost, setOwnerPost] = useState('');
+export default function SignUpPage() {
+  const [name, setName] = useState("")
+  const [employeeId, setEmployeeId] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
 
-  const handleEmployeeCheckboxChange = () => {
-    setIsEmployee(true);
-    setIsOwner(false);  // Automatically uncheck company owner
-  };
-
-  const handleOwnerCheckboxChange = () => {
-    setIsOwner(true);
-    setIsEmployee(false);  // Automatically uncheck employee
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Signing in with:', { email, password, isEmployee, isOwner, firstName, lastName, companyName, post, ownerFirstName, ownerLastName, ownerCompanyName, ownerPost });
-  };
+  // const handleSignUp = (e: React.FormEvent) => {
+  //   e.preventDefault()
+  //   alert(Signing up with ${name}, ${employeeId}, ${email})
+  // }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white p-6">
-      <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center mb-6">Sign Up</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          
-          <div className="flex items-center space-x-2">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className="bg-white p-8 rounded-lg shadow-md w-96"
+      >
+        <h2 className="text-2xl font-semibold text-center mb-6">Sign Up</h2>
+        <form  className="space-y-4">
+          <div className="relative">
+            <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input
-              type="checkbox"
-              id="employee"
-              checked={isEmployee}
-              onChange={handleEmployeeCheckboxChange}
-              className="w-4 h-4"
+              type="text"
+              placeholder="Full Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <label htmlFor="employee" className="text-sm">Are you an office employee?</label>
           </div>
-          {isEmployee && (
-            <>
-              <div className="flex items-center bg-gray-700 p-3 rounded-md">
-                <FaUser className="text-gray-400 mr-2" />
-                <input
-                  type="text"
-                  placeholder="First Name"
-                  className="bg-transparent flex-1 outline-none text-white"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="flex items-center bg-gray-700 p-3 rounded-md">
-                <FaUser className="text-gray-400 mr-2" />
-                <input
-                  type="text"
-                  placeholder="Last Name"
-                  className="bg-transparent flex-1 outline-none text-white"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="flex items-center bg-gray-700 p-3 rounded-md">
-                <FaEnvelope className="text-gray-400 mr-2" />
-                <input
-                  type="email"
-                  placeholder="Gmail ID"
-                  className="bg-transparent flex-1 outline-none text-white"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="flex items-center bg-gray-700 p-3 rounded-md">
-                <FaBuilding className="text-gray-400 mr-2" />
-                <input
-                  type="text"
-                  placeholder="Company Name"
-                  className="bg-transparent flex-1 outline-none text-white"
-                  value={companyName}
-                  onChange={(e) => setCompanyName(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="flex items-center bg-gray-700 p-3 rounded-md">
-                <FaBriefcase className="text-gray-400 mr-2" />
-                <input
-                  type="text"
-                  placeholder="Post"
-                  className="bg-transparent flex-1 outline-none text-white"
-                  value={post}
-                  onChange={(e) => setPost(e.target.value)}
-                  required
-                />
-              </div>
-            </>
-          )}
-
-          <div className="flex items-center space-x-2">
+          <div className="relative">
+            <FaIdCard className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input
-              type="checkbox"
-              id="owner"
-              checked={isOwner}
-              onChange={handleOwnerCheckboxChange}
-              className="w-4 h-4"
+              type="text"
+              placeholder="Employee ID"
+              value={employeeId}
+              onChange={(e) => setEmployeeId(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <label htmlFor="owner" className="text-sm">Are you a company owner?</label>
           </div>
-          {isOwner && (
-            <>
-              <div className="flex items-center bg-gray-700 p-3 rounded-md">
-                <FaUser className="text-gray-400 mr-2" />
-                <input
-                  type="text"
-                  placeholder="Owner First Name"
-                  className="bg-transparent flex-1 outline-none text-white"
-                  value={ownerFirstName}
-                  onChange={(e) => setOwnerFirstName(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="flex items-center bg-gray-700 p-3 rounded-md">
-                <FaUser className="text-gray-400 mr-2" />
-                <input
-                  type="text"
-                  placeholder="Owner Last Name"
-                  className="bg-transparent flex-1 outline-none text-white"
-                  value={ownerLastName}
-                  onChange={(e) => setOwnerLastName(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="flex items-center bg-gray-700 p-3 rounded-md">
-                <FaEnvelope className="text-gray-400 mr-2" />
-                <input
-                  type="email"
-                  placeholder="Owner Gmail ID"
-                  className="bg-transparent flex-1 outline-none text-white"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="flex items-center bg-gray-700 p-3 rounded-md">
-                <FaBuilding className="text-gray-400 mr-2" />
-                <input
-                  type="text"
-                  placeholder="Owner Company Name"
-                  className="bg-transparent flex-1 outline-none text-white"
-                  value={ownerCompanyName}
-                  onChange={(e) => setOwnerCompanyName(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="flex items-center bg-gray-700 p-3 rounded-md">
-                <FaBriefcase className="text-gray-400 mr-2" />
-                <input
-                  type="text"
-                  placeholder="Owner Post"
-                  className="bg-transparent flex-1 outline-none text-white"
-                  value={ownerPost}
-                  onChange={(e) => setOwnerPost(e.target.value)}
-                  required
-                />
-              </div>
-            </>
-          )}
-
-          <button
+          <div className="relative">
+            <FaEnvelope className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="relative">
+            <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             type="submit"
-            className="w-full bg-purple-600 hover:bg-purple-700 transition-all py-2 rounded-md text-lg font-semibold"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md transition duration-300"
           >
-            Sign up
-          </button>
+            Sign Up
+          </motion.button>
         </form>
-      </div>
+        <p className="text-gray-600 text-sm text-center mt-4">
+          Already have an account?{" "}
+          <Link href="/login" className="text-blue-600 hover:underline">
+            Login
+          </Link>
+        </p>
+      </motion.div>
     </div>
-  );
+  )
 }

@@ -4,14 +4,11 @@ import type React from "react"
 import { useState, useCallback, useEffect } from "react"
 import { useMapPoints, type Point } from "./hooks/useMapPoints"
 import CanvasMap from "@/components/ui/CanvasMap"
-import { SearchBar } from "@/components/ui/SearchBar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ZoomIn, ZoomOut, User, X, Plus, UserPlus, Upload } from "lucide-react"
+import { ZoomIn, ZoomOut, User, X, Plus, UserPlus } from "lucide-react"
 
 export default function FloorMapTool() {
   const [image, setImage] = useState<string | null>(null)
@@ -89,22 +86,6 @@ export default function FloorMapTool() {
     }
   }, [newEmployeeName, newEmployeeRole, addEmployee])
 
-  const handleSearch = useCallback(
-    (query: string) => {
-      const lowercaseQuery = query.toLowerCase()
-      const employeeResults = employees
-        .filter((emp) => emp.name.toLowerCase().includes(lowercaseQuery))
-        .map((emp) => ({ id: emp.id, name: emp.name, type: "employee" as const }))
-
-      const objectResults = objectTypes
-        .filter((obj) => obj.name.toLowerCase().includes(lowercaseQuery))
-        .map((obj) => ({ id: obj.name, name: obj.name, type: "object" as const }))
-
-      return [...employeeResults, ...objectResults]
-    },
-    [employees, objectTypes],
-  )
-
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       if (event.key === "+") zoomIn()
@@ -116,130 +97,88 @@ export default function FloorMapTool() {
   }, [zoomIn, zoomOut])
 
   return (
-    <div className="flex h-screen bg-gray-100 overflow-hidden">
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="p-6 overflow-y-auto flex-shrink-0">
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>Floor Map Tool</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Tabs defaultValue="map" className="space-y-4">
-                <TabsList>
-                  <TabsTrigger value="map">Map</TabsTrigger>
-                  <TabsTrigger value="objects">Objects</TabsTrigger>
-                  <TabsTrigger value="employees">Employees</TabsTrigger>
-                </TabsList>
-                <TabsContent value="map" className="space-y-4">
-                  <div className="flex items-center space-x-4">
-                    <Button asChild>
-                      <label htmlFor="image-upload" className="cursor-pointer">
-                        <Upload className="w-4 h-4 mr-2" />
-                        Upload Floor Plan
-                      </label>
-                    </Button>
-                    <Input
-                      id="image-upload"
-                      type="file"
-                      onChange={handleImageUpload}
-                      accept="image/*"
-                      className="hidden"
-                    />
-                    <Button
-                      onClick={() => setActivePointType("seat")}
-                      variant={activePointType === "seat" ? "default" : "outline"}
-                    >
-                      <User className="w-4 h-4 mr-2" />
-                      Add Seat
-                    </Button>
-                    <Select onValueChange={(value) => setActivePointType(value)}>
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Select object" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {objectTypes.map((objectType) => (
-                          <SelectItem key={objectType.name} value={objectType.name}>
-                            <div className="flex items-center">
-                              <div
-                                className="w-4 h-4 rounded-full mr-2"
-                                style={{ backgroundColor: objectType.color }}
-                              />
-                              {objectType.name}
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+    <div className="flex h-screen bg-gray-100">
+      <div className="flex-1 p-4 overflow-hidden">
+        <div className="mb-4 flex items-center space-x-4">
+          <Input type="file" onChange={handleImageUpload} accept="image/*" className="w-64" />
+          <Button
+            onClick={() => setActivePointType("seat")}
+            variant={activePointType === "seat" ? "default" : "outline"}
+          >
+            <User className="w-4 h-4 mr-2" />
+            Add Seat
+          </Button>
+          <Select onValueChange={(value) => setActivePointType(value)}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select object" />
+            </SelectTrigger>
+            <SelectContent>
+              {objectTypes.map((objectType) => (
+                <SelectItem key={objectType.name} value={objectType.name}>
+                  <div className="flex items-center">
+                    <div className="w-4 h-4 rounded-full mr-2" style={{ backgroundColor: objectType.color }} />
+                    {objectType.name}
                   </div>
-                  <div className="flex items-center space-x-4">
-                    <Button onClick={zoomIn}>
-                      <ZoomIn className="w-4 h-4" />
-                    </Button>
-                    <Button onClick={zoomOut}>
-                      <ZoomOut className="w-4 h-4" />
-                    </Button>
-                    <span className="text-sm font-medium">Zoom: {(zoom * 100).toFixed(0)}%</span>
-                  </div>
-                  <SearchBar onSearch={handleSearch} />
-                </TabsContent>
-                <TabsContent value="objects" className="space-y-4">
-                  <div className="flex items-center space-x-4">
-                    <Input
-                      type="text"
-                      placeholder="New object type"
-                      value={newObjectType}
-                      onChange={(e) => setNewObjectType(e.target.value)}
-                    />
-                    <Input
-                      type="color"
-                      value={newObjectColor}
-                      onChange={(e) => setNewObjectColor(e.target.value)}
-                      className="w-12 h-8 p-0"
-                    />
-                    <Button onClick={handleAddObjectType}>
-                      <Plus className="w-4 h-4 mr-2" />
-                      Add Object Type
-                    </Button>
-                  </div>
-                </TabsContent>
-                <TabsContent value="employees" className="space-y-4">
-                  <div className="flex items-center space-x-4">
-                    <Input
-                      type="text"
-                      placeholder="Employee Name"
-                      value={newEmployeeName}
-                      onChange={(e) => setNewEmployeeName(e.target.value)}
-                    />
-                    <Input
-                      type="text"
-                      placeholder="Employee Role"
-                      value={newEmployeeRole}
-                      onChange={(e) => setNewEmployeeRole(e.target.value)}
-                    />
-                    <Button onClick={handleAddEmployee}>
-                      <UserPlus className="w-4 h-4 mr-2" />
-                      Add Employee
-                    </Button>
-                  </div>
-                  <Button onClick={allocateSeats}>Allocate Seats</Button>
-                </TabsContent>
-              </Tabs>
-            </CardContent>
-          </Card>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button onClick={zoomIn}>
+            <ZoomIn className="w-4 h-4" />
+          </Button>
+          <Button onClick={zoomOut}>
+            <ZoomOut className="w-4 h-4" />
+          </Button>
+          <span className="text-sm font-medium">Zoom: {(zoom * 100).toFixed(0)}%</span>
         </div>
-        <div className="flex-grow p-6 overflow-y-auto">
-          <div className="bg-white rounded-lg shadow-md h-full">
-            <CanvasMap
-              image={image}
-              points={points}
-              zoom={zoom}
-              pan={pan}
-              onAddPoint={handleAddPoint}
-              onSelectPoint={handleSelectPoint}
-              activePointType={activePointType}
-              activeColor={objectTypes.find((ot) => ot.name === activePointType)?.color || "#3b82f6"}
-            />
-          </div>
+        <div className="mb-4 flex items-center space-x-4">
+          <Input
+            type="text"
+            placeholder="New object type"
+            value={newObjectType}
+            onChange={(e) => setNewObjectType(e.target.value)}
+          />
+          <Input
+            type="color"
+            value={newObjectColor}
+            onChange={(e) => setNewObjectColor(e.target.value)}
+            className="w-12 h-8 p-0"
+          />
+          <Button onClick={handleAddObjectType}>
+            <Plus className="w-4 h-4 mr-2" />
+            Add Object Type
+          </Button>
+        </div>
+        <div className="mb-4 flex items-center space-x-4">
+          <Input
+            type="text"
+            placeholder="Employee Name"
+            value={newEmployeeName}
+            onChange={(e) => setNewEmployeeName(e.target.value)}
+          />
+          <Input
+            type="text"
+            placeholder="Employee Role"
+            value={newEmployeeRole}
+            onChange={(e) => setNewEmployeeRole(e.target.value)}
+          />
+          <Button onClick={handleAddEmployee}>
+            <UserPlus className="w-4 h-4 mr-2" />
+            Add Employee
+          </Button>
+          <Button onClick={allocateSeats}>Allocate Seats</Button>
+        </div>
+        <div className="relative h-[calc(100vh-300px)] bg-white rounded-lg shadow-md overflow-hidden">
+          <CanvasMap
+            image={image}
+            points={points}
+            zoom={zoom}
+            pan={pan}
+            onAddPoint={handleAddPoint}
+            onSelectPoint={handleSelectPoint}
+            activePointType={activePointType}
+            activeColor={objectTypes.find((ot) => ot.name === activePointType)?.color || "#3b82f6"}
+          />
         </div>
       </div>
       {isSidebarOpen && (
@@ -295,4 +234,3 @@ export default function FloorMapTool() {
     </div>
   )
 }
-
