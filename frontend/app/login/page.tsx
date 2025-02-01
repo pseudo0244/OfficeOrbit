@@ -1,27 +1,61 @@
 'use client';
 
-import { useState } from 'react';
+import { useState , useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/router';
 import { FaUser, FaLock } from 'react-icons/fa';
+import Link from 'next/link';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  // const router = useRouter();
 
-  const handleLogin = (e: React.FormEvent) => {
+  // useEffect(() => {
+  //   setIsClient(true);
+  // }, []);
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert(`Logging in with ${email}`);
+  
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        // Store token in localStorage or cookie
+        localStorage.setItem('token', data.token);
+        // if (isClient) {
+        //   router.push('/home');
+        // }
+  
+        // Redirect or show a success message
+        alert('Login successful');
+      } else {
+        // Handle errors (e.g., show an error message)
+        alert(data.message || 'Login failed');
+      }
+    } catch (error) {
+      alert('An error occurred. Please try again later.');
+    }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-900">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <motion.div 
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="bg-gray-800 p-8 rounded-2xl shadow-lg backdrop-blur-md bg-opacity-20 border border-gray-700 w-96"
+        className="bg-white p-8 rounded-lg shadow-md w-96"
       >
-        <h2 className="text-white text-2xl font-semibold text-center mb-6">Login</h2>
+        <h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
         <form onSubmit={handleLogin} className="space-y-4">
           <div className="relative">
             <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -30,7 +64,7 @@ export default function LoginPage() {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div className="relative">
@@ -40,20 +74,20 @@ export default function LoginPage() {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             type="submit"
-            className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-md transition duration-300"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md transition duration-300"
           >
             Login
           </motion.button>
         </form>
-        <p className="text-gray-400 text-sm text-center mt-4">
-          Don't have an account? <a href="#" className="text-purple-400 hover:underline">Sign up</a>
+        <p className="text-gray-600 text-sm text-center mt-4">
+          Don't have an account? <Link href="/signup" className="text-blue-600 hover:underline">Sign up</Link>
         </p>
       </motion.div>
     </div>
