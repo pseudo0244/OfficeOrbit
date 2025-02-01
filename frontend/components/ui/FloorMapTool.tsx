@@ -10,12 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ZoomIn, ZoomOut, User, X, Plus, UserPlus } from "lucide-react"
 
-interface FloorMapToolProps {
-  officeId: string
-  floorNumber: string
-}
-
-export default function FloorMapTool({ officeId, floorNumber }: FloorMapToolProps) {
+export default function FloorMapTool() {
   const [image, setImage] = useState<string | null>(null)
   const [activePointType, setActivePointType] = useState<"employee" | "seat" | string | null>(null)
   const [selectedPoint, setSelectedPoint] = useState<Point | null>(null)
@@ -24,6 +19,11 @@ export default function FloorMapTool({ officeId, floorNumber }: FloorMapToolProp
   const [newObjectColor, setNewObjectColor] = useState("#000000")
   const [newEmployeeName, setNewEmployeeName] = useState("")
   const [newEmployeeRole, setNewEmployeeRole] = useState("")
+  
+  // State to manage available floors and the selected floor
+  const [floors, setFloors] = useState<number[]>([1, 2, 3, 4]) // Example floor numbers (can be fetched dynamically)
+  const [selectedFloor, setSelectedFloor] = useState<number>(1)
+
   const {
     points,
     addPoint,
@@ -41,23 +41,11 @@ export default function FloorMapTool({ officeId, floorNumber }: FloorMapToolProp
     addObjectType,
   } = useMapPoints()
 
-  useEffect(() => {
-    // Load floor-specific data here
-    // For now, we'll just log the office and floor info
-    console.log(`Loading data for Office ${officeId}, Floor ${floorNumber}`)
-    // In a real application, you would fetch the floor map and other data from an API
-  }, [officeId, floorNumber])
-
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
       const reader = new FileReader()
-      reader.onload = (e) => {
-        const result = e.target?.result as string
-        setImage(result)
-        // Here you would typically save this image to your backend
-        console.log(`Uploading new map for Office ${officeId}, Floor ${floorNumber}`)
-      }
+      reader.onload = (e) => setImage(e.target?.result as string)
       reader.readAsDataURL(file)
     }
   }
@@ -114,7 +102,7 @@ export default function FloorMapTool({ officeId, floorNumber }: FloorMapToolProp
   }, [zoomIn, zoomOut])
 
   return (
-    <div className="flex h-[calc(100vh-100px)] bg-gray-100">
+    <div className="flex h-screen bg-gray-100">
       <div className="flex-1 p-4 overflow-hidden">
         <div className="mb-4 flex items-center space-x-4">
           <Input type="file" onChange={handleImageUpload} accept="image/*" className="w-64" />
@@ -125,21 +113,21 @@ export default function FloorMapTool({ officeId, floorNumber }: FloorMapToolProp
             <User className="w-4 h-4 mr-2" />
             Add Seat
           </Button>
-          <Select onValueChange={(value) => setActivePointType(value)}>
+
+          {/* Dropdown to select floor */}
+          <Select onValueChange={(value) => setSelectedFloor(Number(value))}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select object" />
+              <SelectValue placeholder={`Select Floor ${selectedFloor}`} />
             </SelectTrigger>
             <SelectContent>
-              {objectTypes.map((objectType) => (
-                <SelectItem key={objectType.name} value={objectType.name}>
-                  <div className="flex items-center">
-                    <div className="w-4 h-4 rounded-full mr-2" style={{ backgroundColor: objectType.color }} />
-                    {objectType.name}
-                  </div>
+              {floors.map((floor) => (
+                <SelectItem key={floor} value={String(floor)}>
+                  {`Floor ${floor}`}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
+
           <Button onClick={zoomIn}>
             <ZoomIn className="w-4 h-4" />
           </Button>
@@ -251,4 +239,3 @@ export default function FloorMapTool({ officeId, floorNumber }: FloorMapToolProp
     </div>
   )
 }
-
