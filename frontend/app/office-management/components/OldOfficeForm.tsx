@@ -18,7 +18,7 @@ export default function OfficeForm() {
     };
 
     try {
-      const response = await fetch("http://localhost:5000/api/buildings/create", {
+      const response = await fetch("http://localhost:5002/api/buildings/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
