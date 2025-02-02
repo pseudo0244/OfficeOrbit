@@ -8,21 +8,14 @@ import { Button } from "@/components/ui/button";
 
 export default function FloorMapTool() {
   const { buildingId, floorNumber } = useParams(); // Get dynamic params
-  const {
-    points,
-    addPoint,
-    updatePointPosition,
-    updatePointDetails,
-    zoom,
-    zoomIn,
-    zoomOut,
-    pan,
-    updatePan,
-  } = useMapPoints();
-
+  const { points, addPoint, deletePoint } = useMapPoints(buildingId as string, Number(floorNumber));
+  
   const [floorImage, setFloorImage] = useState<string | null>(null);
+  const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
+    // Fetch floor image
     fetch(`http://localhost:5002/api/buildings/${buildingId}/floors/${floorNumber}`)
       .then((res) => res.json())
       .then((data) => {
@@ -42,11 +35,13 @@ export default function FloorMapTool() {
         pan={pan}
         onAddPoint={addPoint}
         onSelectPoint={(point) => console.log("Selected:", point)}
+        activePointType="seat"
+        activeColor="red"
       />
 
       <div className="flex gap-2">
-        <Button onClick={() => zoomIn()}>Zoom In</Button>
-        <Button onClick={() => zoomOut()}>Zoom Out</Button>
+        <Button onClick={() => setZoom(zoom + 0.1)}>Zoom In</Button>
+        <Button onClick={() => setZoom(Math.max(0.5, zoom - 0.1))}>Zoom Out</Button>
       </div>
     </div>
   );
