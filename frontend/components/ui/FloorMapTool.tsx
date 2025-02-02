@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState, useCallback, useEffect } from "react"
-import { useMapPoints, type Point } from "../../app/hooks/useMapPoints"
+import { useMapPoints, type Point } from "../../../frontend/app/hooks/useMapPoints"
 import CanvasMap from "@/components/ui/CanvasMap"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
