@@ -1,15 +1,18 @@
 const Map = require('../models/Map');
 const Point = require('../models/Point');
 const Floor = require('../models/Floor');
+const cloudinary = require('cloudinary').v2;
+const { uploadFile } = require('../controller/fileUploadController'); 
 
-// Create a new map with uploaded image
+const fs = require('fs');
+
 exports.createMap = async (req, res) => {
-  const { floorId, mapImagePath } = req.body;
+  const { floorId } = req.body;
 
   try {
-    // Check if mapImagePath is provided
-    if (!mapImagePath) {
-      return res.status(400).json({ success: false, message: 'Map image URL is required' });
+    // Check if file is uploaded
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'No file uploaded' });
     }
 
     // Validate the floorId
@@ -18,16 +21,25 @@ exports.createMap = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Floor not found' });
     }
 
-    // Create a new map
+    // Upload the file to Cloudinary
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      folder: 'officeorbit', // Optional: Specify a folder on Cloudinary
+    });
+
+    // Delete the local file after uploading to Cloudinary
+    fs.unlinkSync(req.file.path);
+
+    // Create a new map with the Cloudinary URL
     const newMap = new Map({
       floor: floorId,       // Reference to the floor
-      mapImagePath,         // Use the URL provided in the request
+      mapImagePath: result.secure_url, // Use the Cloudinary URL
       points: [],           // Initialize with an empty array of points
     });
 
     await newMap.save();
     res.status(201).json({ success: true, data: newMap });
   } catch (error) {
+    console.error('Error creating map:', error);
     res.status(400).json({ success: false, message: error.message });
   }
 };
